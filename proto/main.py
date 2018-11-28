@@ -3,10 +3,12 @@ from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
 from .core.exc import ProtoError
 from .controllers.base import Base
+from .controllers.proto.app import ProtoApp
+from .controllers.proto.stack import ProtoStack
+from .controllers.proto.molecules import Molecules
 
 # configuration defaults
 CONFIG = init_defaults('proto')
-CONFIG['proto']['foo'] = 'bar'
 
 
 class Proto(App):
@@ -27,7 +29,8 @@ class Proto(App):
             'colorlog',
             'jinja2',
         ]
-
+        #TODO: make this a config variable
+        # plugin_dirs = ['']
         # configuration handler
         config_handler = 'yaml'
 
@@ -42,7 +45,10 @@ class Proto(App):
 
         # register handlers
         handlers = [
-            Base
+            Base,
+            Molecules,
+            ProtoApp,
+            ProtoStack,
         ]
 
 
@@ -56,8 +62,9 @@ class ProtoTest(TestApp,Proto):
 def main():
     with Proto() as app:
         try:
+            app.add_plugin_dir(app.config.get('proto','molecules_dir'))
+            app.plugin.load_plugins(app.config.get('proto','molecules'))
             app.run()
-
         except AssertionError as e:
             print('AssertionError > %s' % e.args[0])
             app.exit_code = 1

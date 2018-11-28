@@ -3,6 +3,7 @@ from cement import Controller, ex
 from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
+
 VERSION_BANNER = """
 Making managing home servers easier! %s
 %s
@@ -34,27 +35,27 @@ class Base(Controller):
         self.app.args.print_help()
 
 
-    @ex(
-        help='example sub command1',
+    # @ex(
+    #     help='example sub command1',
 
-        # sub-command level arguments. ex: 'proto command1 --foo bar'
-        arguments=[
-            ### add a sample foo option under subcommand namespace
-            ( [ '-f', '--foo' ],
-              { 'help' : 'notorious foo option',
-                'action'  : 'store',
-                'dest' : 'foo' } ),
-        ],
-    )
-    def command1(self):
-        """Example sub-command."""
+    #     # sub-command level arguments. ex: 'proto command1 --foo bar'
+    #     arguments=[
+    #         ### add a sample foo option under subcommand namespace
+    #         ( [ '-f', '--foo' ],
+    #           { 'help' : 'notorious foo option',
+    #             'action'  : 'store',
+    #             'dest' : 'foo' } ),
+    #     ],
+    # )
+    # def command1(self):
+    #     """Example sub-command."""
 
-        data = {
-            'foo' : 'bar',
-        }
+    #     data = {
+    #         'foo' : 'bar',
+    #     }
 
-        ### do something with arguments
-        if self.app.pargs.foo is not None:
-            data['foo'] = self.app.pargs.foo
+    #     ### do something with arguments
+    #     if self.app.pargs.foo is not None:
+    #         data['foo'] = self.app.pargs.foo
 
-        self.app.render(data, 'command1.jinja2')
+    #     self.app.render(data, 'command1.jinja2')
