@@ -3,9 +3,9 @@ from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
 from .core.exc import ProtoError
 from .controllers.base import Base
-from .controllers.proto.app import ProtoApp
-from .controllers.proto.stack import ProtoStack
+from .core.molecule import MoleculeInterface
 from .controllers.proto.molecules import Molecules
+
 
 # configuration defaults
 CONFIG = init_defaults('proto')
@@ -47,10 +47,10 @@ class Proto(App):
         handlers = [
             Base,
             Molecules,
-            ProtoApp,
-            ProtoStack,
         ]
-
+        interfaces = [
+            MoleculeInterface
+        ]
 
 class ProtoTest(TestApp,Proto):
     """A sub-class of Proto that is better suited for testing."""
@@ -62,8 +62,12 @@ class ProtoTest(TestApp,Proto):
 def main():
     with Proto() as app:
         try:
+            print(app.config.get('proto','molecules_dir'))
             app.add_plugin_dir(app.config.get('proto','molecules_dir'))
-            app.plugin.load_plugins(app.config.get('proto','molecules'))
+            # app.plugin.load_plugins(app.config.get('proto','molecules'))
+            print(app.plugin.get_loaded_plugins())
+            print(app.plugin.get_disabled_plugins())
+            print(app.plugin.get_enabled_plugins())
             app.run()
         except AssertionError as e:
             print('AssertionError > %s' % e.args[0])
